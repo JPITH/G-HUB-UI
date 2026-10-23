@@ -18,6 +18,7 @@ import {
   View,
   type ImageSourcePropType,
   type StyleProp,
+  type ViewInstance,
   type ViewStyle,
 } from 'react-native';
 
@@ -51,7 +52,7 @@ const DEFAULT_AUTH_BG = require('./assets/auth-bg.webp') as ImageSourcePropType;
 type AuthScrollProps = {
   style?: StyleProp<ViewStyle>;
   contentContainerStyle?: StyleProp<ViewStyle>;
-  keyboardShouldPersistTaps?: boolean | 'handled' | 'always' | 'never';
+  keyboardShouldPersistTaps?: 'handled' | 'always' | 'never';
   showsVerticalScrollIndicator?: boolean;
   bottomOffset?: number;
   extraKeyboardSpace?: number;
@@ -220,7 +221,7 @@ type AuthButtonProps = {
 };
 
 /** CTA primaire pill — `.btn--primary` web. */
-export const GradientButton = forwardRef<View, AuthButtonProps>(
+export const GradientButton = forwardRef<ViewInstance, AuthButtonProps>(
   function GradientButton({ label, onPress, disabled, style }, ref) {
     const c = useE237Colors();
     const neu = useNeu();
@@ -279,7 +280,7 @@ export const GradientButton = forwardRef<View, AuthButtonProps>(
 );
 
 /** CTA secondaire pill — raised-sm. */
-export const OutlineButton = forwardRef<View, AuthButtonProps>(
+export const OutlineButton = forwardRef<ViewInstance, AuthButtonProps>(
   function OutlineButton({ label, onPress, disabled, style }, ref) {
     const c = useE237Colors();
     const neu = useNeu();

@@ -5,7 +5,7 @@
  */
 import { radius, spacing, useE237Colors } from './core';
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, StyleSheet, View, type ScrollView as RNScrollView } from 'react-native';
+import { Pressable, StyleSheet, View, type ScrollViewInstance } from 'react-native';
 
 import { localeTag } from '@esport237hub/types';
 import { useDsLocale, useDsT, type DsKey } from '../i18n';
@@ -324,7 +324,7 @@ function TimeColumn({
   onPick: (n: number) => void;
 }) {
   const c = useE237Colors();
-  const ref = useRef<RNScrollView>(null);
+  const ref = useRef<ScrollViewInstance>(null);
 
   // À l'ouverture, amène la valeur sélectionnée dans la fenêtre visible.
   useEffect(() => {

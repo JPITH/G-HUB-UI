@@ -34,7 +34,7 @@ import { Txt } from './text';
 type SheetScrollProps = {
   style?: StyleProp<ViewStyle>;
   contentContainerStyle?: StyleProp<ViewStyle>;
-  keyboardShouldPersistTaps?: boolean | 'handled' | 'always' | 'never';
+  keyboardShouldPersistTaps?: 'handled' | 'always' | 'never';
   showsVerticalScrollIndicator?: boolean;
   bottomOffset?: number;
   extraKeyboardSpace?: number;

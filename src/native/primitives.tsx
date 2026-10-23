@@ -43,7 +43,7 @@ type ScreenScrollProps = {
   style?: StyleProp<ViewStyle>;
   contentContainerStyle?: StyleProp<ViewStyle>;
   contentInsetAdjustmentBehavior?: 'automatic' | 'never' | 'scrollableAxes' | 'always';
-  keyboardShouldPersistTaps?: boolean | 'handled' | 'always' | 'never';
+  keyboardShouldPersistTaps?: 'handled' | 'always' | 'never';
   showsVerticalScrollIndicator?: boolean;
   bottomOffset?: number;
   extraKeyboardSpace?: number;
