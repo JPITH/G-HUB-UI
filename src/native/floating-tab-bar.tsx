@@ -285,7 +285,7 @@ function TabItem({
               importantForAccessibility="no-hide-descendants"
               style={[styles.badge, { backgroundColor: c.surface, borderColor: badgeColor }]}
             >
-              <Txt variant="label" size={10} color={badgeColor}>
+              <Txt variant="label" size={10} color={badgeColor} maxFontSizeMultiplier={1.2}>
                 {shownBadge.count > 9 ? '9+' : String(shownBadge.count)}
               </Txt>
             </View>
@@ -294,7 +294,15 @@ function TabItem({
         {/* Masqué aux lecteurs d'écran, qui lisent déjà le libellé de
             l'onglet : il serait annoncé deux fois. */}
         <View importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>
-          <Txt variant="label" size={font.size.xs} color={tint} numberOfLines={1} style={styles.label}>
+          <Txt
+            variant="label"
+            size={font.size.xs}
+            color={tint}
+            numberOfLines={1}
+            // La pilule a une hauteur fixe (52 px) : son titre grandit peu.
+            maxFontSizeMultiplier={1.2}
+            style={styles.label}
+          >
             {title}
           </Txt>
         </View>

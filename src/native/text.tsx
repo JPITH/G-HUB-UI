@@ -140,6 +140,14 @@ export interface TxtProps extends Omit<TextProps, 'style'> {
   style?: StyleProp<TextStyle>;
 }
 
+/**
+ * Plafond d'agrandissement du texte (réglage « grande police » du
+ * téléphone), 31/10/2026 : sans lui, les cartes et la barre d'onglets se
+ * cassaient à 200 %. 1,6 garde le texte nettement plus grand pour qui en a
+ * besoin ; un appelant peut passer sa propre valeur (`maxFontSizeMultiplier`).
+ */
+export const TXT_MAX_FONT_SCALE = 1.6;
+
 /** Texte produit : police, taille et couleur issues des tokens. */
 export function Txt({
   children,
@@ -175,6 +183,7 @@ export function Txt({
 
   return (
     <Text
+      maxFontSizeMultiplier={TXT_MAX_FONT_SCALE}
       {...rest}
       style={[
         base,
