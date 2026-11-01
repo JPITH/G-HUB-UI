@@ -46,7 +46,7 @@ import {
   View,
   type FlatList as RNFlatList,
   type LayoutChangeEvent,
-  type ScrollView as RNScrollView,
+  type ScrollViewInstance,
   type ScrollViewProps as RNScrollViewProps,
   type StyleProp,
   type ViewStyle,
@@ -328,7 +328,7 @@ function useWiredIndicator<T>(
 
 export type ScrollViewProps = RNScrollViewProps &
   ScrollIndicatorOptions & {
-    ref?: Ref<RNScrollView>;
+    ref?: Ref<ScrollViewInstance>;
   };
 
 /**

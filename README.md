@@ -1,10 +1,13 @@
-# @esport237hub/ui
+# G-HUB-UI
 
-Design system officiel d'**ESPORT 237 HUB** — la plateforme e-sport du Cameroun (duels vérifiés, salles de jeux, compétitions, classements).
+Design system officiel de **G-HUB** — la plateforme e-sport du Cameroun (duels vérifiés, salles de jeux, compétitions, classements).
 
 Basé sur **[Astryx](https://astryx.atmeta.com/)**, le design system open-source de Meta (React + StyleX, 160+ composants), avec un thème maison `esport237` et des composants métier partagés entre le **web** (Next.js, Astro) et le **mobile** (React Native / Expo).
 
 > Dépôt public pour l'instant ; pourra être rendu privé et publié sur npm plus tard sans changer les imports.
+
+
+Compatibilité native : **Expo SDK 58**, React Native 0.88 et React 19.3. Les contrôles Expo UI utilisent les couleurs et le mode du DS ; les sélecteurs de date gardent un repli web.
 
 ## Principes
 
