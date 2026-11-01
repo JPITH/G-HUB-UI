@@ -40,6 +40,7 @@ import {
 import {
   Pressable,
   ScrollView,
+  type ScrollViewInstance,
   StyleSheet,
   View,
   type StyleProp,
@@ -112,7 +113,7 @@ export function Carousel({
   const c = useE237Colors();
   const t = useDsT();
   const reduced = useReducedMotion();
-  const scroller = useRef<ScrollView>(null);
+  const scroller = useRef<ScrollViewInstance>(null);
   // La largeur est MESURÉE, pas déduite de l'écran : le carrousel sert aussi
   // bien dans une carte à padding que dans une feuille modale.
   const [width, setWidth] = useState(0);

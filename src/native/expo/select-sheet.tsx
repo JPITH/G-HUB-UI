@@ -4,7 +4,7 @@
 import { Host, Picker } from '@expo/ui';
 import { View } from 'react-native';
 
-import { spacing } from '../core';
+import { spacing, useE237Colors, useE237Mode } from '../core';
 import { FieldLabel } from '../fields';
 import type { SelectOption } from '../select-sheet';
 
@@ -28,12 +28,14 @@ export function SelectSheet({
   value: string | null;
   onChange: (value: string) => void;
 }) {
+  const colors = useE237Colors();
+  const mode = useE237Mode();
   const selected = value ?? EMPTY;
 
   return (
     <View style={{ gap: spacing['1'] }}>
       {label ? <FieldLabel label={label} required={required} /> : null}
-      <Host matchContents>
+      <Host matchContents colorScheme={mode} seedColor={colors.accent}>
         <Picker
           selectedValue={selected}
           appearance="menu"

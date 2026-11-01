@@ -6,6 +6,9 @@ Basé sur **[Astryx](https://astryx.atmeta.com/)**, le design system open-source
 
 > Dépôt public pour l'instant ; pourra être rendu privé et publié sur npm plus tard sans changer les imports.
 
+
+Compatibilité native : **Expo SDK 58**, React Native 0.88 et React 19.3. Les contrôles Expo UI utilisent les couleurs et le mode du DS ; les sélecteurs de date gardent un repli web.
+
 ## Principes
 
 1. **Une seule source de tokens** — `src/tokens/index.ts` (TS pur, zéro dépendance). Le CSS (`theme.css`) et les composants natifs en dérivent.

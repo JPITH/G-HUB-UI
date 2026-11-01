@@ -8,32 +8,22 @@ import { useState } from 'react';
 import type { IconName } from '../../icons/names';
 import { localeTag } from '@esport237hub/types';
 
-import { useDsLocale } from '../../i18n';
-import { useE237Colors } from '../core';
+import { useDsLocale, useDsT } from '../../i18n';
+import { Button, useE237Colors } from '../core';
 import { FieldTrigger } from '../date-time';
+
+// Expo UI n’expose pas encore de pas de minutes : conserver les quarts d’heure.
+export { TimeField } from '../date-time';
 import { Sheet } from './sheet';
 
 function toISODate(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
-function toHHMM(d: Date): string {
-  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-}
-
 function parseDate(iso: string | null): Date {
   if (!iso) return new Date();
   const d = new Date(`${iso}T12:00:00`);
   return Number.isNaN(d.getTime()) ? new Date() : d;
-}
-
-function parseTime(hhmm: string | null): Date {
-  const base = new Date();
-  if (!hhmm) return base;
-  const [h, m] = hhmm.split(':').map((n) => Number.parseInt(n, 10));
-  if (Number.isNaN(h) || Number.isNaN(m)) return base;
-  base.setHours(h, m, 0, 0);
-  return base;
 }
 
 /**
@@ -50,6 +40,7 @@ function NativePickerField({
   filled,
   current,
   onPick,
+  onClear,
 }: {
   label?: string;
   required?: boolean;
@@ -59,9 +50,11 @@ function NativePickerField({
   filled: boolean;
   current: Date;
   onPick: (date: Date) => void;
+  onClear?: () => void;
 }) {
   const c = useE237Colors();
   const [open, setOpen] = useState(false);
+  const t = useDsT();
   return (
     <>
       <FieldTrigger
@@ -73,16 +66,18 @@ function NativePickerField({
         onPress={() => setOpen(true)}
       />
       <Sheet open={open} onClose={() => setOpen(false)} title={label}>
-        <DateTimePicker
+        {open ? <DateTimePicker
           mode={mode}
           value={current}
           accentColor={c.accent}
           is24Hour
+          onDismiss={() => setOpen(false)}
           onValueChange={(_e, date) => {
             onPick(date);
             setOpen(false);
           }}
-        />
+        /> : null}
+        {onClear ? <Button variant="secondary" label={t('form.action.clear')} onPress={() => { onClear(); setOpen(false); }} /> : null}
       </Sheet>
     </>
   );
@@ -123,34 +118,7 @@ export function DateField({
       filled={!!value}
       current={current}
       onPick={(date) => onChange(toISODate(date))}
-    />
-  );
-}
-
-export function TimeField({
-  label,
-  required,
-  value,
-  onChange,
-  placeholder = 'Choisir une heure…',
-}: {
-  label?: string;
-  /** Champ obligatoire : un astérisque suit le libellé. */
-  required?: boolean;
-  value: string | null;
-  onChange: (value: string | null) => void;
-  placeholder?: string;
-}) {
-  return (
-    <NativePickerField
-      label={label}
-      required={required}
-      icon="clock"
-      mode="time"
-      text={value ?? placeholder}
-      filled={!!value}
-      current={parseTime(value)}
-      onPick={(date) => onChange(toHHMM(date))}
+      onClear={value && !required ? () => onChange(null) : undefined}
     />
   );
 }

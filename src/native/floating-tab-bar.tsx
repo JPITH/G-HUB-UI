@@ -106,9 +106,10 @@ export interface FloatingTabBarGlassProps {
 
 /**
  * Le strict nécessaire des props que `Tabs` (expo-router) passe à `tabBar`.
- * Méthodes en syntaxe abrégée : leurs paramètres restent bivariants, donc
- * l'objet `navigation` typé par React Navigation reste assignable sans
- * dépendre de `@react-navigation/bottom-tabs`.
+ * Expo Router 58 ne passe plus `navigation` : il fournit un `emitter` (événements
+ * `tabPress`/`tabLongPress`) et `navigateToTab(routeKey)`. Méthodes en syntaxe
+ * abrégée : leurs paramètres restent bivariants, donc les objets typés par
+ * Expo Router restent assignables sans dépendre de ses types internes.
  */
 export interface FloatingTabBarProps {
   /**
@@ -121,10 +122,11 @@ export interface FloatingTabBarProps {
     routes: { key: string; name: string; params?: object }[];
   };
   descriptors?: Record<string, { options: { title?: string; tabBarAccessibilityLabel?: string } }>;
-  navigation: {
+  emitter: {
     emit(event: { type: string; target?: string; canPreventDefault?: boolean }): unknown;
-    navigate(name: string, params?: object): void;
   };
+  /** Bascule sur l'onglet de cette CLÉ de route (pas son nom). */
+  navigateToTab(routeKey: string): void;
   /** Zone sûre basse (barre d'accueil, gestes) — fournie par le layout. */
   safeAreaBottom: number;
   /**
@@ -315,7 +317,8 @@ export function FloatingTabBar({
   tabs,
   state,
   descriptors,
-  navigation,
+  emitter,
+  navigateToTab,
   safeAreaBottom,
   renderGlass,
 }: FloatingTabBarProps) {
@@ -338,16 +341,16 @@ export function FloatingTabBar({
                 focused={focused}
                 badge={tab.badge}
                 onPress={() => {
-                  const event = navigation.emit({
+                  const event = emitter.emit({
                     type: 'tabPress',
                     target: route.key,
                     canPreventDefault: true,
-                  }) as { defaultPrevented?: boolean } | undefined;
-                  if (!focused && !event?.defaultPrevented) {
-                    navigation.navigate(route.name, route.params);
-                  }
+                  });
+                  const prevented =
+                    typeof event === 'object' && event !== null && 'defaultPrevented' in event && event.defaultPrevented === true;
+                  if (!focused && !prevented) navigateToTab(route.key);
                 }}
-                onLongPress={() => navigation.emit({ type: 'tabLongPress', target: route.key })}
+                onLongPress={() => emitter.emit({ type: 'tabLongPress', target: route.key })}
               />
             );
           })}
