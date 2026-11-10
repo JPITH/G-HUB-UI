@@ -5,9 +5,9 @@
  *   bun scripts/astryx-css.ts --check   # échoue si le fichier n'est pas à jour
  *
  * `@astryxdesign/core/astryx.css` porte le StyleX précompilé de TOUS ses
- * composants (127 Ko, 21 Ko gzip) ; G-HUB n'en réexporte que quatre
- * (src/web/astryx.ts). L'app web le chargeait en entier, en CSS bloquant le
- * rendu. On garde chaque règle dont toutes les classes apparaissent dans le
+ * composants (127 Ko, 21 Ko gzip) ; G-HUB n'en réexporte que l'avatar et le
+ * groupe d'avatars (src/web/astryx.ts) : 15 Ko, 4 Ko gzip. L'app web le
+ * chargeait en entier, en CSS bloquant le rendu. On garde chaque règle dont toutes les classes apparaissent dans le
  * JavaScript de ces composants et de leurs imports relatifs — StyleX émet une
  * règle par ligne et des noms de classe atomiques, un filtre ligne à ligne
  * suffit. À relancer après une mise à jour d'Astryx ou un nouveau réexport

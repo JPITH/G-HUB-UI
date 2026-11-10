@@ -3031,6 +3031,95 @@
 /* Barres de défilement : une seule règle, pour toute zone qui défile, dans
    `scrollbar.css` (lot T1). Plus aucune règle de barre par composant ici. */
 
+/* L'extrait de classement (.mkt-rank*, <RankPreview>) sert AUSSI l'accueil de
+   l'app web : il reste ici, pas dans marketing.css. */
+/* ---------------------------------------------------------------- */
+/* Extrait de classement — lignes en pilules creusées                */
+/* ---------------------------------------------------------------- */
+.mkt-rank {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e237-spacing-2);
+  padding: var(--e237-spacing-3);
+  border-radius: var(--e237-radius-xl);
+  background: var(--e237-surface);
+  box-shadow: var(--e237-neu-edge), var(--e237-neu-raised);
+}
+.mkt-rank__row {
+  display: grid;
+  grid-template-columns: 32px 1fr auto;
+  align-items: center;
+  gap: var(--e237-spacing-3);
+  min-height: 44px;
+  padding: 0 var(--e237-spacing-3);
+  border-radius: var(--e237-radius-full);
+  background: var(--e237-bg);
+  box-shadow: var(--e237-neu-pressed-sm);
+  font-size: 13.5px;
+}
+.mkt-rank__pos {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--e237-radius-full);
+  background: var(--e237-surface);
+  color: var(--e237-text-secondary);
+  font-family: var(--e237-font-display);
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: var(--e237-neu-raised-sm);
+}
+.mkt-rank__pos--1 {
+  color: var(--e237-gold);
+}
+.mkt-rank__pos--2,
+.mkt-rank__pos--3 {
+  color: var(--e237-cyan);
+}
+.mkt-rank__name {
+  font-family: var(--e237-font-display);
+  font-weight: 700;
+  color: var(--e237-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mkt-rank__city {
+  display: none;
+  color: var(--e237-text-muted);
+  font-size: 12.5px;
+}
+@media (min-width: 520px) {
+  .mkt-rank__row {
+    grid-template-columns: 32px 1fr auto auto;
+  }
+  .mkt-rank__city {
+    display: block;
+  }
+}
+.mkt-rank__div {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--e237-accent);
+}
+/* Ligne fantôme : la place encore libre du visiteur. */
+.mkt-rank__row--ghost {
+  background: transparent;
+  box-shadow: none;
+  border: 1px dashed color-mix(in srgb, var(--e237-accent) 45%, transparent);
+}
+.mkt-rank__row--ghost .mkt-rank__pos {
+  color: var(--e237-accent);
+}
+.mkt-rank__row--ghost .mkt-rank__name {
+  color: var(--e237-text-secondary);
+  font-weight: 600;
+}
+
 /* Reduced-motion : animations décoratives UI (pas le feedback focus). */
 @media (prefers-reduced-motion: reduce) {
   .ui-animate-fade,

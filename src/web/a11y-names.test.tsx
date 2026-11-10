@@ -4,6 +4,7 @@ import type { ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 import { DivisionBadge } from './division-badge';
+import { RankPreview } from './marketing';
 import { Combobox, Select } from './pickers';
 import { TrendArrow } from './trend-arrow';
 
@@ -60,5 +61,17 @@ describe('combobox : un nom même sans libellé visible', () => {
     const out = html(<Select id="tri" label="Trier par" options={options} value="a" onChange={() => {}} />);
     expect(out).toContain('for="tri"');
     expect(out).toContain('id="tri"');
+  });
+});
+
+describe('feuilles : une classe que l’app web rend vit dans components.css', () => {
+  it('RankPreview (accueil de l’app web) ne dépend pas de marketing.css', () => {
+    const out = html(
+      <RankPreview lines={[{ rank: 1, username: 'a', city: 'Douala', division: 'DIV 1' }]} ghostLabel="Ta place" />,
+    );
+    const components = readFileSync(new URL('../theme/components.css', import.meta.url), 'utf8');
+    for (const [, list] of out.matchAll(/class="([^"]+)"/g)) {
+      for (const cls of list!.split(' ')) expect({ cls, ici: components.includes(`.${cls}`) }).toEqual({ cls, ici: true });
+    }
   });
 });

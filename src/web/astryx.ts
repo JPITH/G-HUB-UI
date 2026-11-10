@@ -10,8 +10,8 @@
  * 160+ composants sera exposé progressivement, au fur et à mesure des besoins.
  */
 
-export { Button as AstryxButton } from '@astryxdesign/core/Button';
-export { VStack, HStack } from '@astryxdesign/core/Layout';
+// Button, VStack, HStack retirés le 11/11/2026 : réexportés, jamais utilisés,
+// et leur StyleX partait en CSS bloquant dans l'app web (scripts/astryx-css.ts).
 export {
   Avatar as AstryxAvatar,
   type AvatarSize as AstryxAvatarSize,

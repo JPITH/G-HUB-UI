@@ -10,9 +10,9 @@ describe('CSS Astryx réduit (scripts/astryx-css.ts)', () => {
     expect(css).toBe(build());
   });
 
-  test('garde les classes du bouton et de la pile, retire celles des composants non réexportés', () => {
-    const button = readFileSync(Bun.resolveSync('@astryxdesign/core/Button', import.meta.dir).replace('index.js', 'Button.js'), 'utf8');
-    const used = button.match(/"(x[a-z0-9]{5,8})"/)![1]!;
+  test('garde les classes de l’avatar, retire celles des composants non réexportés', () => {
+    const avatar = readFileSync(Bun.resolveSync('@astryxdesign/core/Avatar', import.meta.dir).replace('index.js', 'Avatar.js'), 'utf8');
+    const used = avatar.match(/"(x[a-z0-9]{5,8})"/)![1]!;
     expect(css).toContain(`.${used}`);
     // AppShell n'est pas réexporté : sa mise en page n'a rien à faire ici.
     const shell = readFileSync(Bun.resolveSync('@astryxdesign/core/AppShell', import.meta.dir).replace('index.js', 'AppShell.js'), 'utf8');
