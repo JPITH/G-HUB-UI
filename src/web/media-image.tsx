@@ -39,6 +39,11 @@ export interface MediaImageProps {
   fallbackLabel?: string;
   className?: string;
   style?: CSSProperties;
+  /**
+   * L'image du LCP (la première carte visible d'une liste) : chargée tout de
+   * suite, en priorité haute. Une seule par écran, les autres restent différées.
+   */
+  priority?: boolean;
 }
 
 type Status = "loading" | "ready" | "error";
@@ -63,6 +68,7 @@ export function MediaImage({
   fallbackLabel,
   className = "",
   style,
+  priority = false,
 }: MediaImageProps) {
   // 0 = `src`, 1 = `fallbackSrc` après un échec de `src`.
   const [attempt, setAttempt] = useState<0 | 1>(0);
@@ -96,7 +102,8 @@ export function MediaImage({
           className="e237-media__img"
           src={src}
           alt={alt}
-          loading="lazy"
+          loading={priority ? "eager" : "lazy"}
+          fetchPriority={priority ? "high" : undefined}
           decoding="async"
           style={{ objectFit: fit, opacity: status === "ready" ? 1 : 0 }}
           onLoad={() => setStatus("ready")}
