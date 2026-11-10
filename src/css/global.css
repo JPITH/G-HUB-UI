@@ -9,7 +9,9 @@
  */
 
 @import '@astryxdesign/core/reset.css';
-@import '@astryxdesign/core/astryx.css';
+/* StyleX des seuls composants réexportés (scripts/astryx-css.ts) : 54 Ko au
+   lieu de 127 Ko de CSS bloquant pour 160 composants. */
+@import '../theme/astryx.css';
 @import '@astryxdesign/theme-neutral/theme.css';
 @import '../theme/theme.css';
 @import '../theme/components.css';

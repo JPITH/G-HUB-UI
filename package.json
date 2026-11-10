@@ -17,6 +17,7 @@
     "./theme": "./src/theme/esport237.ts",
     "./theme.css": "./src/theme/theme.css",
     "./components.css": "./src/theme/components.css",
+    "./marketing.css": "./src/theme/marketing.css",
     "./scrollbar.css": "./src/theme/scrollbar.css",
     "./css": "./src/css/global.css",
     "./lib": "./src/lib/index.ts",
@@ -34,7 +35,9 @@
     "icons": "bun scripts/icons.ts",
     "icons:check": "bun scripts/icons.ts --check",
     "shapes": "bun scripts/card-shapes.ts",
-    "shapes:check": "bun scripts/card-shapes.ts --check"
+    "shapes:check": "bun scripts/card-shapes.ts --check",
+    "astryx-css": "bun scripts/astryx-css.ts",
+    "astryx-css:check": "bun scripts/astryx-css.ts --check"
   },
   "dependencies": {
     "@astryxdesign/core": "0.1.8",

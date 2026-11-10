@@ -175,6 +175,7 @@ function PickerTrigger({
   text,
   empty,
   textClassName = "",
+  name,
 }: {
   id: string;
   popup: "listbox" | "dialog";
@@ -188,6 +189,8 @@ function PickerTrigger({
   /** Rien de choisi : le texte est l'invite, en `text-muted`. */
   empty: boolean;
   textClassName?: string;
+  /** Nom accessible sans libellé visible : un combobox ne le tire jamais de son contenu. */
+  name?: AccessibleName;
 }) {
   const list = popup === "listbox";
   return (
@@ -200,6 +203,8 @@ function PickerTrigger({
       aria-haspopup={popup}
       aria-required={(list && required) || undefined}
       aria-expanded={open}
+      aria-label={name?.["aria-label"]}
+      aria-labelledby={name?.["aria-labelledby"]}
       onClick={onClick}
       onKeyDown={onKeyDown}
       className={`ui-field flex h-11 w-full cursor-pointer items-center ${
@@ -267,7 +272,16 @@ function OptionList({
 /* Select maison — listbox custom, plus aucun <select> natif.          */
 /* ------------------------------------------------------------------ */
 
-export interface SelectProps {
+/**
+ * Sans `label` visible, le déclencheur (role="combobox") n'a AUCUN nom :
+ * passer `aria-label`, ou `aria-labelledby` vers le titre qui le décrit.
+ */
+export interface AccessibleName {
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
+}
+
+export interface SelectProps extends AccessibleName {
   label?: string;
   /** Champ obligatoire : un astérisque suit le libellé. */
   required?: boolean;
@@ -290,6 +304,7 @@ export function Select({
   disabled,
   className = "",
   id,
+  ...name
 }: SelectProps) {
   const t = useDsT();
   const autoId = useId();
@@ -349,6 +364,7 @@ export function Select({
         onKeyDown={onKeyDown}
         text={selected?.label ?? fieldPlaceholder}
         empty={!selected}
+        name={name}
       />
 
       {open ? (
@@ -389,6 +405,7 @@ export function Combobox({
   disabled,
   className = "",
   id,
+  ...name
 }: ComboboxProps) {
   const t = useDsT();
   const autoId = useId();
@@ -449,6 +466,7 @@ export function Combobox({
         onClick={() => setOpen((o) => !o)}
         text={selected?.label ?? fieldPlaceholder}
         empty={!selected}
+        name={name}
       />
 
       {open ? (

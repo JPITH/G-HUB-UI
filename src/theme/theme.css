@@ -404,27 +404,29 @@
 }
 
 /* Pilule de division — affiche « DIV 1 » ; le nom reste dans aria-label.
-   La teinte vient de --e237-div-tone (posée en inline par le composant quand
-   le back-office fournit une couleur), sinon du cyan des tokens. */
+   Sans couleur du back-office : la pastille cyan des tokens (texte 700 sur
+   teinte 50 = 5.01:1 en clair ; l'ancien color-mix à 14 % tombait à 4.45:1).
+   Avec une couleur (`--toned`), la teinte vient de --e237-div-tone, posée en
+   inline par le composant. */
 .e237-divbadge {
   display: inline-flex;
   align-items: center;
   border-radius: var(--e237-radius-full);
   padding: 2px 9px;
-  border: 1px solid
-    color-mix(in srgb, var(--e237-div-tone, var(--e237-cyan)) 50%, transparent);
-  background: color-mix(
-    in srgb,
-    var(--e237-div-tone, var(--e237-cyan)) 14%,
-    transparent
-  );
-  color: var(--e237-div-tone, var(--e237-cyan));
+  border: 1px solid var(--e237-cyan-border);
+  background: var(--e237-cyan-subtle);
+  color: var(--e237-cyan);
   font-family: var(--e237-font-display, var(--e237-font-body));
   font-size: 11px;
   font-weight: 700;
   line-height: 1.45;
   letter-spacing: 0.08em;
   white-space: nowrap;
+}
+.e237-divbadge--toned {
+  border-color: color-mix(in srgb, var(--e237-div-tone) 50%, transparent);
+  background: color-mix(in srgb, var(--e237-div-tone) 14%, transparent);
+  color: var(--e237-div-tone);
 }
 
 /* Flèche de mouvement au classement (haute verte / basse rouge / neutre). */

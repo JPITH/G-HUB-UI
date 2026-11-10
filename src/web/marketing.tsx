@@ -15,7 +15,7 @@
  * 3. **Relief neumorphique** composé uniquement des tokens `--e237-neu-*` —
  *    jamais de `box-shadow` littérale (cf. DESIGN.md).
  *
- * Les classes `.mkt-*` correspondantes vivent dans `src/theme/components.css`.
+ * Les classes `.mkt-*` correspondantes vivent dans `src/theme/marketing.css`.
  */
 import type { HTMLAttributes, ReactNode } from 'react';
 
