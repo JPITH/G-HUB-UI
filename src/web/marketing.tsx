@@ -1002,6 +1002,7 @@ export function MarketingFooter({
                       ) : (
                         <span
                           className="mkt-social mkt-social--soon"
+                          role="img"
                           aria-label={`${s.label} (bientôt)`}
                           data-tip={`${s.label} · bientôt`}
                         >

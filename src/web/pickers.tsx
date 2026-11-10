@@ -195,8 +195,10 @@ function PickerTrigger({
       type="button"
       id={id}
       disabled={disabled}
+      // « combobox » (liste) porte aria-required ; un simple bouton ne le peut pas (axe aria-allowed-attr).
+      role={list ? "combobox" : undefined}
       aria-haspopup={popup}
-      aria-required={required || undefined}
+      aria-required={(list && required) || undefined}
       aria-expanded={open}
       onClick={onClick}
       onKeyDown={onKeyDown}
