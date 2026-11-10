@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Icon } from "../icons/generated/web";
 
 import { Picture } from "./picture";
@@ -49,6 +49,20 @@ export interface MediaImageProps {
 type Status = "loading" | "ready" | "error";
 
 /**
+ * L'état au montage. Une image rendue par le SERVEUR peut avoir fini de
+ * charger avant l'hydratation : son `load` est alors perdu, et elle restait à
+ * opacité 0 (10/11/2026, « Nos jeux » rendu côté serveur). `complete` avec des
+ * pixels = prête ; le reste attend `onLoad` / `onError`.
+ */
+export function mountedStatus(
+  img: { complete: boolean; naturalWidth: number } | null | undefined,
+  hasSrc: boolean,
+): Status {
+  if (!hasSrc) return "error";
+  return img?.complete && img.naturalWidth > 0 ? "ready" : "loading";
+}
+
+/**
  * Image distante réutilisable (produits, événements, salles).
  *
  * - URL absente ou en erreur → repli illustré sur `surface-raised`, pas un
@@ -74,10 +88,11 @@ export function MediaImage({
   const [attempt, setAttempt] = useState<0 | 1>(0);
   const src = attempt === 1 ? fallbackSrc : primarySrc;
   const [status, setStatus] = useState<Status>(src ? "loading" : "error");
+  const frame = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     setAttempt(0);
-    setStatus(primarySrc || fallbackSrc ? "loading" : "error");
+    setStatus(mountedStatus(frame.current?.querySelector("img"), Boolean(primarySrc || fallbackSrc)));
   }, [primarySrc, fallbackSrc]);
 
   const onError = () => {
@@ -94,6 +109,7 @@ export function MediaImage({
 
   return (
     <span
+      ref={frame}
       className={`e237-media ${loading ? "ui-skeleton" : ""} ${className}`.trim()}
       style={{ aspectRatio: ratio, borderRadius: RADIUS[rounded], ...style }}
     >
