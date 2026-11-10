@@ -34,4 +34,15 @@ describe('MediaImage : priority', () => {
     expect(out).toContain('loading="eager"');
     expect(out).toContain('fetchPriority="high"');
   });
+
+  /**
+   * Le fondu (opacité 0 jusqu'à `onLoad`) attend le JavaScript : sur l'image
+   * du LCP rendue par le serveur, il repoussait le LCP après l'hydratation
+   * (5,1 s simulés sur « Nos jeux » mobile). L'image prioritaire est visible
+   * dès qu'elle arrive.
+   */
+  it("priority : visible sans attendre l'hydratation ; les autres gardent le fondu", () => {
+    expect(renderToStaticMarkup(<MediaImage src="https://cdn.test/a.avif" alt="" priority />)).not.toContain('opacity:0');
+    expect(renderToStaticMarkup(<MediaImage src="https://cdn.test/a.avif" alt="" />)).toContain('opacity:0');
+  });
 });

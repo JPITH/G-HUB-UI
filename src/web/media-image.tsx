@@ -121,7 +121,8 @@ export function MediaImage({
           loading={priority ? "eager" : "lazy"}
           fetchPriority={priority ? "high" : undefined}
           decoding="async"
-          style={{ objectFit: fit, opacity: status === "ready" ? 1 : 0 }}
+          // L'image du LCP ne fond pas : elle se montre dès son arrivée, sans attendre le JavaScript.
+          style={{ objectFit: fit, opacity: status === "ready" || priority ? 1 : 0 }}
           onLoad={() => setStatus("ready")}
           onError={onError}
         />
