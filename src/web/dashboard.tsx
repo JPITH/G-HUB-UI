@@ -762,7 +762,8 @@ export function ContextPanel({
     <section className={cx('e237-context-panel', className)} {...rest}>
       {title || action ? (
         <div className="e237-context-panel__head">
-          {title ? <h3 className="e237-context-panel__title">{title}</h3> : <span />}
+          {/* h2 : la colonne passe souvent juste sous le h1 (au téléphone, avant le contenu). */}
+          {title ? <h2 className="e237-context-panel__title">{title}</h2> : <span />}
           {action}
         </div>
       ) : null}
