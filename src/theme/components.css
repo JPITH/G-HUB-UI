@@ -5014,10 +5014,13 @@
   margin-left: 0;
 }
 
-/* Photo d'un post : sous le texte, bornée en hauteur. */
+/* Photo d'un post : sous le texte, bornée en hauteur. Son cadre est réservé
+   (4:3, rogné par `cover`) : sans dimensions connues, la photo arrivait à
+   hauteur nulle puis poussait le fil (CLS de l'accueil, perf web tour 4). */
 .e237-post__image {
   display: block;
   width: 100%;
+  aspect-ratio: 4 / 3;
   max-height: 420px;
   border: 1px solid var(--e237-border);
   border-radius: var(--e237-radius-lg);
