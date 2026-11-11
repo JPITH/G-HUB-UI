@@ -129,10 +129,20 @@ export function Button({
   const c = useE237Colors();
   const neu = useNeu();
   const locked = disabled || loading;
+  /* Désactivé (pas en chargement) : un style NEUTRE, pas l'aplat de la variante
+     à moitié transparent, qui ressemblait encore à un bouton actif et se lisait
+     mal en clair (revue du 11/11/2026). Texte atténué, contraste vérifié
+     (`textMuted`, tokens/contrast.test.ts). */
+  const inert = disabled && !loading;
   const containerStyle: ViewStyle[] = [styles.btn];
   const labelStyle: TextStyle[] = [styles.btnLabel];
 
-  if (variant === 'primary') {
+  if (inert) {
+    if (variant !== 'ghost') {
+      containerStyle.push(styles.btnInert, { backgroundColor: c.surfaceSunken, borderColor: c.border });
+    }
+    labelStyle.push({ color: c.textMuted });
+  } else if (variant === 'primary') {
     containerStyle.push({ backgroundColor: c.accent });
     labelStyle.push({ color: c.onAccent });
   } else if (variant === 'secondary') {
@@ -156,7 +166,9 @@ export function Button({
       style={({ pressed }) => [
         containerStyle,
         block && styles.btnBlock,
-        variant === 'primary'
+        inert
+          ? null
+          : variant === 'primary'
           ? pressed
             ? neu.pressedSm
             : neu.primaryGlow(c.accent)
@@ -166,7 +178,7 @@ export function Button({
               : neu.raisedSm
             : null,
         pressed && variant === 'ghost' && styles.pressed,
-        locked && styles.disabled,
+        loading && styles.disabled,
         style,
       ]}
     >
@@ -357,6 +369,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   btnLabelHidden: { opacity: 0 },
+  // Même hauteur que les autres : 1 px de bord pris sur le rembourrage.
+  btnInert: { borderWidth: 1, paddingVertical: 9 },
   disabled: {
     opacity: 0.5,
   },
