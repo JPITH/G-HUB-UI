@@ -2678,6 +2678,9 @@
 }
 
 .e237-event-row__thumb--fallback {
+  display: grid;
+  place-items: center;
+  color: var(--e237-text-secondary);
   background:
     radial-gradient(
       120% 100% at 80% 20%,
@@ -4074,8 +4077,13 @@
   font-size: 13px;
   line-height: 1.4;
   color: var(--e237-text-secondary);
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  /* Deux lignes, puis « … » (revue du tour 3 : « 2 ouvertes mai… »,
+     « Contre DeidoM… » coupaient l'information utile à 390 px). */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow-wrap: anywhere;
 }
 
 .e237-page-header__actions {
@@ -4912,8 +4920,13 @@
   font-size: 14px;
   font-weight: 600;
   color: var(--e237-text-strong);
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  /* Deux lignes, puis « … » (revue du tour 3 : « 2 ouvertes mai… »,
+     « Contre DeidoM… » coupaient l'information utile à 390 px). */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow-wrap: anywhere;
 }
 
 .e237-nav-item--danger .e237-nav-item__label {
@@ -4924,8 +4937,13 @@
   overflow: hidden;
   font-size: 12px;
   color: var(--e237-text-secondary);
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  /* Deux lignes, puis « … » (revue du tour 3 : « 2 ouvertes mai… »,
+     « Contre DeidoM… » coupaient l'information utile à 390 px). */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow-wrap: anywhere;
 }
 
 .e237-nav-item__trailing {

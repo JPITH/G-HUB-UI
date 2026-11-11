@@ -164,11 +164,14 @@ export function GameRail({
                       active && 'e237-game-rail__btn--active',
                       coming && 'e237-game-rail__btn--soon',
                     )}
-                    aria-label={coming ? `${g.name} (bientôt)` : g.name}
                     aria-current={active ? 'true' : undefined}
                     disabled={coming}
                     onClick={() => onSelect?.(g.id)}
                   >
+                    {/* Le nom passe par du TEXTE, pas un `aria-label` : « AW »
+                        visible contre « Awalé » annoncé faisait échouer
+                        label-content-name-mismatch (revue du tour 3). */}
+                    <span className="e237-visually-hidden">{coming ? `${g.name} (bientôt)` : g.name}</span>
                     {/* Info-bulle IMMÉDIATE (survol et focus clavier) : le
                         `title` natif n'apparaissait qu'après une seconde, et
                         cinq vignettes sans nom ne disaient pas ce que le rail
@@ -574,6 +577,8 @@ export interface EventRowProps extends Omit<HTMLAttributes<HTMLElement>, 'title'
   timeLabel: ReactNode;
   eyebrow?: ReactNode;
   imageUrl?: string;
+  /** Sans image (ou image cassée) : posé dans la vignette — l'icône du type d'évènement. */
+  icon?: ReactNode;
   meta?: ReactNode;
   href?: string;
 }
@@ -583,6 +588,7 @@ export function EventRow({
   timeLabel,
   eyebrow,
   imageUrl,
+  icon,
   meta,
   href,
   className,
@@ -609,7 +615,9 @@ export function EventRow({
           onError={() => setBroken(true)}
         />
       ) : (
-        <span className="e237-event-row__thumb e237-event-row__thumb--fallback" aria-hidden />
+        <span className="e237-event-row__thumb e237-event-row__thumb--fallback" aria-hidden>
+          {icon}
+        </span>
       )}
       <div className="e237-event-row__text">
         {eyebrow ? <span className="e237-event-row__eyebrow">{eyebrow}</span> : null}
