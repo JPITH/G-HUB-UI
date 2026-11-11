@@ -33,6 +33,7 @@ import {
 } from '../tokens';
 import type { Tone } from '../lib/tone';
 import { widenAmountGaps } from '../lib/money';
+import { inertIcon } from './button-icon';
 import { haptic } from './haptics';
 import { useNeu } from './neu';
 import { fontFamily } from './typography';
@@ -153,6 +154,12 @@ export function Button({
   }
 
   const spinnerColor = variant === 'primary' ? c.onAccent : c.accent;
+  // Inerte : l'icône suit le libellé atténué, sinon `onAccent` disparaît sur `surfaceSunken`.
+  const renderIcon = (node: ReactNode) => {
+    if (!node || !inert) return node;
+    const out = inertIcon(node, c.textMuted);
+    return out.dim ? <View style={styles.iconDim}>{out.node}</View> : out.node;
+  };
 
   return (
     <Pressable
@@ -193,12 +200,12 @@ export function Button({
           <ActivityIndicator size="small" color={spinnerColor} />
         </View>
       ) : null}
-      {!loading && icon ? icon : null}
+      {!loading && icon ? renderIcon(icon) : null}
       {/* Montant lisible : espace pleine insécable à la place de l'espace fine (webB-20). */}
       <Text style={[...labelStyle, loading && styles.btnLabelHidden]}>
         {widenAmountGaps(label)}
       </Text>
-      {!loading && iconRight ? iconRight : null}
+      {!loading && iconRight ? renderIcon(iconRight) : null}
     </Pressable>
   );
 }
@@ -371,6 +378,7 @@ const styles = StyleSheet.create({
   btnLabelHidden: { opacity: 0 },
   // Même hauteur que les autres : 1 px de bord pris sur le rembourrage.
   btnInert: { borderWidth: 1, paddingVertical: 9 },
+  iconDim: { opacity: 0.5 },
   disabled: {
     opacity: 0.5,
   },
