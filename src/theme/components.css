@@ -3398,6 +3398,16 @@
   background: var(--e237-surface-raised);
 }
 
+/* La photo d'un avatar (Astryx) remplit son cercle. Ses règles StyleX vivent
+   dans `@layer astryx-base`, sous le `img { height: auto }` du reset de
+   Tailwind : la hauteur restait celle de l'image (photo non carrée décalée,
+   et Lighthouse « unsized-images » sur l'accueil connecté). Hors couche ici,
+   la taille est explicite. */
+.e237-avatar img {
+  width: 100%;
+  height: 100%;
+}
+
 .e237-post__cover--fallback {
   display: grid;
   place-items: center;

@@ -61,7 +61,8 @@ export function Avatar({
       alt={alt ?? name ?? undefined}
       size={toAvatarSize(size)}
       status={status}
-      className={className}
+      // `.e237-avatar` (components.css) : la photo remplit le cercle.
+      className={className ? `e237-avatar ${className}` : 'e237-avatar'}
     />
   );
 }
@@ -113,6 +114,7 @@ export function AvatarGroup({
           name={p.name}
           src={p.src ?? undefined}
           alt={p.name}
+          className="e237-avatar"
         />
       ))}
       {overflow > 0 ? (
