@@ -355,8 +355,10 @@ export function nodeText(node: ReactNode): string {
 /*
  * La mémoire des alertes fermées, partagée par toutes les bannières de
  * l'onglet : un store externe (`useSyncExternalStore`). Côté serveur — et
- * pendant l'hydratation — l'état est INCONNU (`null`) et la bannière ne
- * s'affiche pas : une alerte déjà fermée ne clignote jamais à l'écran.
+ * pendant l'hydratation — rien n'est fermé : la bannière part dans le HTML
+ * (elle ne pousse plus la page en arrivant après l'hydratation) et le script
+ * inline `DISMISSED_ALERTS_SCRIPT` masque avant la première peinture celles
+ * que ce navigateur a fermées ; l'hydratation les retire ensuite du DOM.
  */
 const dismissListeners = new Set<() => void>();
 let dismissedCache: DismissedAlerts | null = null;
@@ -375,8 +377,10 @@ function dismissedSnapshot(): DismissedAlerts {
   return dismissedCache;
 }
 
-function serverSnapshot(): DismissedAlerts | null {
-  return null;
+const NOTHING_DISMISSED: DismissedAlerts = {};
+
+function serverSnapshot(): DismissedAlerts {
+  return NOTHING_DISMISSED;
 }
 
 function subscribeDismissed(listener: () => void): () => void {
@@ -477,7 +481,7 @@ export function AlertBanner({
   const signature = occurrence === undefined ? content : `${content}#${occurrence}`;
   const remembered = remember ?? rememberAlertByDefault(tone);
 
-  // Hydratation en cours (état inconnu) ou alerte déjà fermée : rien.
+  // Alerte déjà fermée (mémoire du navigateur, ou ICI) : rien.
   if (!alertVisible({ id, signature, dismissible, remember: remembered, dismissed, closedHere })) {
     return null;
   }
@@ -496,6 +500,7 @@ export function AlertBanner({
       className={cx("e237-alert", `e237-alert--${tone}`, className)}
       role={tone === "danger" ? "alert" : "status"}
       data-alert-id={id}
+      data-alert-sig={dismissible && remembered ? signature : undefined}
     >
       <span className="e237-alert__icon">
         <Icon name={icon ?? ALERT_ICON[tone]} size={18} />
