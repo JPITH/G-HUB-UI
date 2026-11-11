@@ -87,10 +87,10 @@ describe('feuilles : une classe que l’app web rend vit dans components.css', (
  */
 describe('nom accessible = texte du bouton, pas un aria-label qui contredit le visuel', () => {
   it('GameRail : vignette sans image nommée par son texte', () => {
-    const out = html(<GameRail games={[{ id: 'aw', name: 'Awalé' }, { id: 'p4', name: 'Puissance 4', status: 'coming_soon' }]} />);
+    const out = html(<GameRail games={[{ id: 'aw', name: 'Awalé' }, { id: 'p4', name: 'Quatre en ligne', status: 'coming_soon' }]} />);
     expect(out).not.toContain('aria-label="Awalé"');
     expect(out).toContain('<span class="e237-visually-hidden">Awalé</span>');
-    expect(out).toContain('<span class="e237-visually-hidden">Puissance 4 (bientôt)</span>');
+    expect(out).toContain('<span class="e237-visually-hidden">Quatre en ligne (bientôt)</span>');
     expect(out).toContain('<span class="e237-game-rail__fallback" aria-hidden="true">AW</span>');
   });
 

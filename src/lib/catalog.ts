@@ -38,9 +38,9 @@ const GAME_ASSET: Record<string, string> = {
   ludo: 'ludo',
   echecs: 'echecs',
   dames: 'dames',
-  // Visuels Higgsfield du 11/11/2026 : le rail montrait « AW » / « PU ».
+  // Visuels du 11/11/2026 (le Quatre en ligne, dessiné, remplace l'ancien nom).
   awale: 'awale',
-  'puissance-4': 'puissance-4',
+  'quatre-en-ligne': 'quatre-en-ligne',
 };
 
 /**
