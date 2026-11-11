@@ -38,6 +38,9 @@ const GAME_ASSET: Record<string, string> = {
   ludo: 'ludo',
   echecs: 'echecs',
   dames: 'dames',
+  // Visuels Higgsfield du 11/11/2026 : le rail montrait « AW » / « PU ».
+  awale: 'awale',
+  'puissance-4': 'puissance-4',
 };
 
 /**
