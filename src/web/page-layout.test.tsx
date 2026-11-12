@@ -10,7 +10,9 @@ import {
   SectionHeader,
   nodeText,
 } from './page-layout';
+import { alertSignature } from '../lib/alert-dismissal';
 import { SettingsLayout, SettingsRow, SettingsSection } from './settings-layout';
+import { ContextPanel } from './dashboard';
 
 const html = (el: ReactElement) => renderToStaticMarkup(el);
 
@@ -94,8 +96,10 @@ describe('SectionHeader', () => {
 });
 
 describe('AlertBanner — les alertes fermables (règle 3)', () => {
-  it('une alerte fermable ne s’affiche pas tant que la mémoire n’est pas lue (pas de clignotement)', () => {
-    expect(html(<AlertBanner id="x" title="Choisis tes jeux" />)).toBe('');
+  it('une alerte fermable part dans le HTML serveur, signée pour le script qui masque les fermées (pas de décalage)', () => {
+    const out = html(<AlertBanner id="x" title="Choisis tes jeux" />);
+    expect(out).toContain('data-alert-id="x"');
+    expect(out).toContain(`data-alert-sig="${alertSignature('Choisis tes jeux\n')}"`);
   });
 
   it('une alerte NON fermable s’affiche, sans croix', () => {
@@ -192,5 +196,17 @@ describe('SettingsLayout', () => {
     expect(out).toContain('aria-labelledby="rappels-title"');
     expect(out).toContain('<label class="e237-settings-row__label" for="r1">');
     expect(out).toContain('e237-settings-row__control');
+  });
+});
+
+describe('ContextPanel — titre de la colonne', () => {
+  it('titre en h2 : posé juste sous le h1 (colonne d’abord au téléphone), il ne saute pas de niveau', () => {
+    const out = html(
+      <ContextPanel title="Filtres">
+        <p>Contenu</p>
+      </ContextPanel>,
+    );
+    expect(out).toContain('<h2 class="e237-context-panel__title">Filtres</h2>');
+    expect(out).not.toContain('<h3');
   });
 });

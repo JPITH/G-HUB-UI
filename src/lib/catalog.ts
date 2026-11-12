@@ -38,6 +38,9 @@ const GAME_ASSET: Record<string, string> = {
   ludo: 'ludo',
   echecs: 'echecs',
   dames: 'dames',
+  // Visuels du 11/11/2026 (le Quatre en ligne, dessiné, remplace l'ancien nom).
+  awale: 'awale',
+  'quatre-en-ligne': 'quatre-en-ligne',
 };
 
 /**

@@ -148,3 +148,37 @@ export function writeDismissed(
     return false;
   }
 }
+
+/**
+ * Masque, AVANT la première peinture, les alertes déjà fermées : le HTML
+ * serveur montre toutes les alertes mémorisables (il ne lit pas le
+ * `localStorage`), et les faire apparaître après l'hydratation poussait la
+ * page (CLS 0,043 sur `/dashboard` au bureau, 11/11/2026). Autonome : il est
+ * sérialisé tel quel dans un `<script>` inline, il n'appelle rien d'autre.
+ */
+function hideDismissedAlerts(
+  key: string,
+  storage: Pick<AlertStorage, 'getItem'>,
+  doc: { createElement(tag: 'style'): { textContent: string | null }; head: { appendChild(node: never): unknown } },
+): void {
+  try {
+    const value = JSON.parse(storage.getItem(key) || '{}') as Record<string, unknown>;
+    const rules: string[] = [];
+    for (const id in value) {
+      const sig = value[id];
+      if (typeof sig === 'string') {
+        rules.push('[data-alert-id=' + JSON.stringify(id) + '][data-alert-sig=' + JSON.stringify(sig) + ']');
+      }
+    }
+    if (rules.length === 0) return;
+    const style = doc.createElement('style');
+    style.textContent = rules.join(',') + '{display:none!important}';
+    doc.head.appendChild(style as never);
+  } catch {
+    // Mémoire illisible ou bloquée : les alertes restent affichées.
+  }
+}
+
+/** Le `<script>` inline de `hideDismissedAlerts`, à poser en tête de page. */
+// L'accès même à `localStorage` peut lever (stockage bloqué) : dans le `try`.
+export const DISMISSED_ALERTS_SCRIPT = `try{(${hideDismissedAlerts.toString()})(${JSON.stringify(ALERT_DISMISSAL_KEY)},localStorage,document)}catch(e){}`;

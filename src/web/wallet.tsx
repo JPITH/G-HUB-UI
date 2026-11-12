@@ -74,6 +74,8 @@ export interface TransactionRowProps {
   /** Date déjà mise en forme par l'appelant (`formatDate`). */
   dateLabel: string;
   amountXaf: number;
+  /** Une marque courte après la date (« test » : argent fictif). */
+  tag?: ReactNode;
   className?: string;
 }
 
@@ -88,6 +90,7 @@ export function TransactionRow({
   label,
   dateLabel,
   amountXaf,
+  tag,
   className = "",
 }: TransactionRowProps) {
   const credit = direction === "credit";
@@ -107,7 +110,10 @@ export function TransactionRow({
       </span>
       <div className="flex min-w-0 flex-col">
         <span className="truncate text-sm font-medium">{label}</span>
-        <span className="text-xs text-muted">{dateLabel}</span>
+        <span className="flex items-center gap-1.5 text-xs text-muted">
+          {dateLabel}
+          {tag}
+        </span>
       </div>
       <span
         className={`ml-auto shrink-0 text-sm font-bold tabular-nums ${

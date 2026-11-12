@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Icon } from "../icons/generated/web";
 
 import { Picture } from "./picture";
@@ -39,9 +39,28 @@ export interface MediaImageProps {
   fallbackLabel?: string;
   className?: string;
   style?: CSSProperties;
+  /**
+   * L'image du LCP (la première carte visible d'une liste) : chargée tout de
+   * suite, en priorité haute. Une seule par écran, les autres restent différées.
+   */
+  priority?: boolean;
 }
 
 type Status = "loading" | "ready" | "error";
+
+/**
+ * L'état au montage. Une image rendue par le SERVEUR peut avoir fini de
+ * charger avant l'hydratation : son `load` est alors perdu, et elle restait à
+ * opacité 0 (10/11/2026, « Nos jeux » rendu côté serveur). `complete` avec des
+ * pixels = prête ; le reste attend `onLoad` / `onError`.
+ */
+export function mountedStatus(
+  img: { complete: boolean; naturalWidth: number } | null | undefined,
+  hasSrc: boolean,
+): Status {
+  if (!hasSrc) return "error";
+  return img?.complete && img.naturalWidth > 0 ? "ready" : "loading";
+}
 
 /**
  * Image distante réutilisable (produits, événements, salles).
@@ -63,15 +82,17 @@ export function MediaImage({
   fallbackLabel,
   className = "",
   style,
+  priority = false,
 }: MediaImageProps) {
   // 0 = `src`, 1 = `fallbackSrc` après un échec de `src`.
   const [attempt, setAttempt] = useState<0 | 1>(0);
   const src = attempt === 1 ? fallbackSrc : primarySrc;
   const [status, setStatus] = useState<Status>(src ? "loading" : "error");
+  const frame = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     setAttempt(0);
-    setStatus(primarySrc || fallbackSrc ? "loading" : "error");
+    setStatus(mountedStatus(frame.current?.querySelector("img"), Boolean(primarySrc || fallbackSrc)));
   }, [primarySrc, fallbackSrc]);
 
   const onError = () => {
@@ -88,6 +109,7 @@ export function MediaImage({
 
   return (
     <span
+      ref={frame}
       className={`e237-media ${loading ? "ui-skeleton" : ""} ${className}`.trim()}
       style={{ aspectRatio: ratio, borderRadius: RADIUS[rounded], ...style }}
     >
@@ -96,9 +118,11 @@ export function MediaImage({
           className="e237-media__img"
           src={src}
           alt={alt}
-          loading="lazy"
+          loading={priority ? "eager" : "lazy"}
+          fetchPriority={priority ? "high" : undefined}
           decoding="async"
-          style={{ objectFit: fit, opacity: status === "ready" ? 1 : 0 }}
+          // L'image du LCP ne fond pas : elle se montre dès son arrivée, sans attendre le JavaScript.
+          style={{ objectFit: fit, opacity: status === "ready" || priority ? 1 : 0 }}
           onLoad={() => setStatus("ready")}
           onError={onError}
         />

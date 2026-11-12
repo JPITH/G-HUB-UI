@@ -212,16 +212,19 @@ export function CardStage({
       role={canFlip ? "button" : undefined}
       tabIndex={canFlip ? 0 : undefined}
       aria-pressed={canFlip ? flipped : undefined}
-      aria-label={canFlip ? flipLabel : undefined}
     >
+      {/* Retournable : le nom du bouton est ce texte, et les faces sont
+          masquées (un `aria-label` contredisait tout le texte visible de la
+          carte : label-content-name-mismatch, revue du tour 3). */}
+      {canFlip ? <span className="e237-visually-hidden">{flipLabel}</span> : null}
       <div className="pcard-stage__flipper">
-        <div className="pcard-stage__face" aria-hidden={flipped || undefined}>
+        <div className="pcard-stage__face" aria-hidden={canFlip || flipped || undefined}>
           {front}
         </div>
         {canFlip && backMounted ? (
           <div
             className="pcard-stage__face pcard-stage__face--back"
-            aria-hidden={!flipped || undefined}
+            aria-hidden
           >
             {back}
           </div>

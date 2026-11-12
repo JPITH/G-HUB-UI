@@ -51,6 +51,8 @@ export function TrendArrow({
   return (
     <span
       className={`e237-trend e237-trend--${movement} ${className}`.trim()}
+      // Un aria-label sur un <span> n'est permis qu'avec un rôle (axe aria-prohibited-attr).
+      role="img"
       aria-label={full}
       title={full}
     >

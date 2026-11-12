@@ -21,6 +21,7 @@ import {
 } from '../lib/catalog';
 import { formatXaf, priceOrFreeLabel } from '../lib/money';
 import { formatRatingAverage, ratingCountLabel } from '../lib/rating';
+import { ROLE, color, ramp } from '../tokens';
 import { Badge, Card, font, radius, spacing, useE237Colors } from './core';
 import { MediaImage } from './media-image';
 import { PerkList } from './perk-list';
@@ -640,7 +641,17 @@ export function VenueCard({
           />
           {isOpen !== undefined ? (
             <View style={styles.floatBadge}>
-              <Badge tone={isOpen ? 'accent' : 'neutral'}>
+              {/* Sur une PHOTO : un fond plein, le même dans les deux thèmes (la
+                  photo ne change pas avec le thème). La pastille teintée se
+                  perdait sur une image sombre en clair (revue du 11/11/2026). */}
+              <Badge
+                tone={isOpen ? 'success' : 'neutral'}
+                style={{
+                  backgroundColor: isOpen ? ramp.success[ROLE.light.fill] : color.dark.surface,
+                  borderColor: 'transparent',
+                }}
+                textStyle={{ color: isOpen ? ROLE.light.onFill : color.dark.textStrong }}
+              >
                 {isOpen ? 'Ouvert' : 'Fermé'}
               </Badge>
             </View>
@@ -654,35 +665,42 @@ export function VenueCard({
           ) : null}
         </View>
 
-        <View style={styles.headRow}>
-          <View style={styles.headMain}>
-            <Txt variant="label" numberOfLines={1}>
-              {name}
+        {/* Le nom d'abord, sur toute la largeur (deux lignes au plus) : le prix
+            qui partageait sa ligne le coupait à 360 px. Le prix descend sur la
+            ligne de la note (revue du 11/11/2026). */}
+        <View style={styles.venueHead}>
+          <Txt variant="label" numberOfLines={2}>
+            {name}
+          </Txt>
+          <View style={styles.metaItem}>
+            <Icon name="map-pin" color={c.textMuted} size={14} />
+            <Txt variant="caption" tone="muted" numberOfLines={2} style={styles.shrink}>
+              {city}
+              {district ? ` · ${district}` : ''}
             </Txt>
-            <View style={styles.metaItem}>
-              <Icon name="map-pin" color={c.textMuted} size={14} />
-              <Txt variant="caption" tone="muted" numberOfLines={1}>
-                {city}
-                {district ? ` · ${district}` : ''}
-              </Txt>
-            </View>
-            {rated ? (
-              <View style={styles.metaItem}>
-                <Icon name="star" color={c.gold} filled size={13} strokeWidth={1.5} />
-                <Txt variant="numeric" size={font.size.xs} tone="gold">
-                  {formatRatingAverage(ratingAvg)}
-                </Txt>
-                <Txt variant="caption" tone="muted">
-                  {ratingCountLabel(ratingCount)}
-                </Txt>
-              </View>
-            ) : null}
           </View>
-          {pricePerHour != null ? (
-            <Txt variant="bodyBold" tone="accent">
-              {formatXaf(pricePerHour)}
-              <Txt variant="caption" tone="muted"> /h</Txt>
-            </Txt>
+          {rated || pricePerHour != null ? (
+            <View style={styles.priceRow}>
+              {rated ? (
+                <View style={styles.metaItem}>
+                  <Icon name="star" color={c.gold} filled size={13} strokeWidth={1.5} />
+                  <Txt variant="numeric" size={font.size.xs} tone="gold">
+                    {formatRatingAverage(ratingAvg)}
+                  </Txt>
+                  <Txt variant="caption" tone="muted">
+                    {ratingCountLabel(ratingCount)}
+                  </Txt>
+                </View>
+              ) : (
+                <View />
+              )}
+              {pricePerHour != null ? (
+                <Txt variant="bodyBold" tone="accent" numberOfLines={1}>
+                  {formatXaf(pricePerHour)}
+                  <Txt variant="caption" tone="muted"> /h</Txt>
+                </Txt>
+              ) : null}
+            </View>
           ) : null}
         </View>
 
@@ -728,6 +746,15 @@ const styles = StyleSheet.create({
     gap: spacing['3'],
   },
   headMain: { flex: 1, gap: spacing['1'] },
+  venueHead: { gap: spacing['1'] },
+  priceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    gap: spacing['2'],
+  },
+  shrink: { flexShrink: 1 },
   badges: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing['1-5'] },
   metaRow: {
     flexDirection: 'row',

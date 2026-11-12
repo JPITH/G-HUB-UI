@@ -56,7 +56,8 @@ export function DivisionBadge({
 
   return (
     <span
-      className={`e237-divbadge ${className}`.trim()}
+      className={`e237-divbadge${color ? " e237-divbadge--toned" : ""} ${className}`.trim()}
+      role="img"
       aria-label={full}
       title={full}
       style={toned}

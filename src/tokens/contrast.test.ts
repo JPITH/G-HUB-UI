@@ -64,7 +64,8 @@ describe.each(['light', 'dark'] as const)('mode %s', (mode) => {
 
   it('une pastille teintée reste lisible', () => {
     const role = ROLE[mode];
-    for (const name of ['accent', 'success', 'danger', 'warning', 'info'] as const) {
+    // cyan : la pilule de division (.e237-divbadge) sans couleur du back-office.
+    for (const name of ['accent', 'cyan', 'success', 'danger', 'warning', 'info'] as const) {
       const ratio = contrast(ramp[name][role.text], ramp[name][role.tint]);
       expect(ratio, `${mode} · pastille ${name} = ${ratio.toFixed(2)}`).toBeGreaterThanOrEqual(AA);
     }

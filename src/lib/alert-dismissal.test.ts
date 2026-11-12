@@ -3,6 +3,7 @@ import { describe, expect, it } from 'bun:test';
 import {
   ALERT_DISMISSAL_KEY,
   ALERT_DISMISSAL_MAX,
+  DISMISSED_ALERTS_SCRIPT,
   alertSignature,
   alertVisible,
   isAlertDismissed,
@@ -135,5 +136,42 @@ describe('alertVisible : une nouvelle occurrence revient (audit web WA1)', () =>
     expect(rememberAlertByDefault('danger')).toBe(false);
     expect(rememberAlertByDefault('warning')).toBe(true);
     expect(rememberAlertByDefault('info')).toBe(true);
+  });
+});
+
+describe('DISMISSED_ALERTS_SCRIPT — les alertes fermées masquées avant la première peinture', () => {
+  /** Exécute le script inline avec un `localStorage` et un `document` factices ; rend la CSS posée. */
+  function run(stored: string | null, throws = false): string | null {
+    let css: string | null = null;
+    const storage = {
+      getItem: (k: string) => {
+        if (throws) throw new Error('bloqué');
+        return k === ALERT_DISMISSAL_KEY ? stored : null;
+      },
+    };
+    const doc = {
+      createElement: () => ({ textContent: '' }),
+      head: { appendChild: (el: { textContent: string }) => (css = el.textContent) },
+    };
+    new Function('localStorage', 'document', DISMISSED_ALERTS_SCRIPT)(storage, doc);
+    return css;
+  }
+
+  it('masque chaque alerte fermée par son identifiant ET sa signature', () => {
+    expect(run(JSON.stringify({ 'home-attention': 'abc', 'photo-invite': 'z9' }))).toBe(
+      '[data-alert-id="home-attention"][data-alert-sig="abc"],[data-alert-id="photo-invite"][data-alert-sig="z9"]{display:none!important}',
+    );
+  });
+
+  it('rien de fermé, mémoire illisible ou bloquée : aucune règle, aucune erreur', () => {
+    expect(run(null)).toBeNull();
+    expect(run('pas du json')).toBeNull();
+    expect(run(JSON.stringify({ a: 3 }))).toBeNull();
+    expect(run(null, true)).toBeNull();
+  });
+
+  it('un `localStorage` dont l’accès même lève (stockage bloqué) ne casse pas la page', () => {
+    const blocked = new Function(`const localStorage = undefined; Object.defineProperty(globalThis, '__e237Blocked', { get() { throw new Error('bloqué'); }, configurable: true }); ${DISMISSED_ALERTS_SCRIPT.replace(',localStorage,', ',__e237Blocked,')}`);
+    expect(() => blocked()).not.toThrow();
   });
 });

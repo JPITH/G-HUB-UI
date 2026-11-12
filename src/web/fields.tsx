@@ -627,7 +627,7 @@ export function PhoneInput({
               aria-expanded={open}
               aria-controls={open ? listId : undefined}
               aria-activedescendant={open && list[hi] ? `${listId}-${list[hi].code}` : undefined}
-              aria-label={`Indicatif : ${current.name} (+${current.dial})`}
+              aria-label={`+${current.dial}, indicatif ${current.name}`}
               disabled={disabled}
               onClick={() => (open ? setOpen(false) : openMenu())}
               onKeyDown={onMenuKey}
